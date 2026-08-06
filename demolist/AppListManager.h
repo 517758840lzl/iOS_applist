@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @return 包含 name / bundleID 键的字典数组
 + (NSArray<NSDictionary<NSString *, NSString *> *> *)installedApps;
 
+/// 通过 NSJSONSerialization 打印应用列表，中文正常显示
++ (void)logApps:(NSArray<NSDictionary<NSString *, NSString *> *> *)apps;
+
 @end
 
 NS_ASSUME_NONNULL_END
