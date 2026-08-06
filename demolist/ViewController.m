@@ -18,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"已安装应用";
+    
+    self.view.backgroundColor = [UIColor whiteColor];
 
     [self setupTableView];
     [self loadApps];
@@ -45,12 +47,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
 
     NSDictionary *app = self.apps[indexPath.row];
     cell.textLabel.text = app[@"name"];
-    cell.detailTextLabel.text = app[@"bundleID"];
 
     return cell;
 }
