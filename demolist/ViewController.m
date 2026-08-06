@@ -35,6 +35,11 @@
 
 - (void)loadApps {
     self.apps = [AppListManager installedApps];
+    self.title = [NSString stringWithFormat:@"已安装应用 (%lu)", (unsigned long)self.apps.count];
+    NSLog(@"ViewController: loaded %lu apps", (unsigned long)self.apps.count);
+    for (NSDictionary *dict in self.apps) {
+        NSLog(@"%@",dict);
+    }
     [self.tableView reloadData];
 }
 
@@ -47,11 +52,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
     }
 
     NSDictionary *app = self.apps[indexPath.row];
     cell.textLabel.text = app[@"name"];
+    cell.detailTextLabel.text = app[@"bundleID"];
+    cell.detailTextLabel.textColor = [UIColor secondaryLabelColor];
 
     return cell;
 }
