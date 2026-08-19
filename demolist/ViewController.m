@@ -36,7 +36,6 @@
 - (void)loadApps {
     self.apps = [AppListManager installedApps];
     self.title = [NSString stringWithFormat:@"已安装应用 (%lu)", (unsigned long)self.apps.count];
-    NSLog(@"ViewController: loaded %lu apps", (unsigned long)self.apps.count);
     [AppListManager logApps:self.apps];
     [self.tableView reloadData];
 }
