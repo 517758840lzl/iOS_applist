@@ -4,7 +4,6 @@
 //
 
 #import "AppListManager.h"
-#import <dlfcn.h>
 
 @implementation AppListManager
 
@@ -61,16 +60,28 @@
 
 + (BOOL)isExtensionName:(NSString *)name {
     if (name.length == 0) return NO;
-    if ([name containsString:@"扩展"] || [name containsString:@"小组件"]) return YES;
 
-    NSString *lower = [[name lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *lower = [[[name lowercaseString]
+                        stringByReplacingOccurrencesOfString:@" " withString:@""]
+                       stringByReplacingOccurrencesOfString:@"-" withString:@""];
     static NSArray<NSString *> *keywords;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         keywords = @[
-            @"widget", @"extension", @"intent", @"notification",
-            @"broadcast", @"liveactivity", @"replay", @"fileprovider",
-            @"packettunnel", @"siripay", @"handler", @"shortcut"
+            // Latin / API-style
+            @"widget", @"extension", @"extensión", @"extensão", @"extensie",
+            @"erweiterung", @"estensione", @"eklenti", @"plugin",
+            @"intent", @"notification", @"broadcast", @"liveactivity",
+            @"replay", @"fileprovider", @"packettunnel", @"siripay",
+            @"handler", @"shortcut",
+            // zh Hans / Hant
+            @"扩展", @"擴展", @"小组件", @"小組件", @"插件", @"外掛",
+            // ja
+            @"拡張", @"ウィジェット", @"プラグイン",
+            // ko
+            @"확장", @"위젯", @"플러그인",
+            // ru / pl
+            @"расширение", @"виджет", @"rozszerzenie", @"widżet",
         ];
     });
     for (NSString *kw in keywords) {
@@ -256,10 +267,6 @@
 + (NSArray<NSDictionary<NSString *, NSString *> *> *)installedApps {
     @try {
         Class workspaceClass = NSClassFromString(@"LSApplicationWorkspace");
-        if (!workspaceClass) {
-            dlopen("/System/Library/Frameworks/CoreServices.framework/CoreServices", RTLD_LAZY);
-            workspaceClass = NSClassFromString(@"LSApplicationWorkspace");
-        }
         if (!workspaceClass) return @[];
 
         SEL defaultWorkspaceSel = NSSelectorFromString(@"defaultWorkspace");
