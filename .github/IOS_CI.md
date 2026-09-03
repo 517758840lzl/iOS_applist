@@ -23,7 +23,8 @@
 
 ```
 你点「Run workflow」
-    → GitHub 分配临时 macOS
+    → GitHub 分配临时 macOS 15
+    → 选用 Xcode 26（与本机工程格式一致）
     → checkout 本仓库
     → xcodebuild Release（CODE_SIGNING_ALLOWED=NO）
     → 上传 demolist.app（无签名）为 Artifact

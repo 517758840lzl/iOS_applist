@@ -8,12 +8,18 @@ on:
 
 jobs:
   build-ios-unsigned:
-    runs-on: macos-14
+    # demolist 工程是 Xcode 26 格式（objectVersion 77）；macos-14 默认 Xcode 太旧会报错
+    runs-on: macos-15
     timeout-minutes: 45
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select Xcode 26
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26"
 
       - name: Show Xcode version
         run: xcodebuild -version
