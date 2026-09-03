@@ -1,0 +1,41 @@
+# 免费 Apple 账号可跑：无签名冒烟构建（验证 GitHub Actions 流程）
+# 原生 iOS 工程（demolist）；不会产出可安装的正式 IPA
+# 触发：GitHub → Actions → iOS Build Smoke → Run workflow
+name: iOS Build Smoke
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios-unsigned:
+    runs-on: macos-14
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build (no codesign)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -scheme demolist \
+            -project demolist.xcodeproj \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Upload unsigned demolist.app
+        uses: actions/upload-artifact@v4
+        with:
+          name: demolist-app-unsigned
+          path: build/DerivedData/Build/Products/Release-iphoneos/demolist.app
+          if-no-files-found: error
+          retention-days: 7
